@@ -2,7 +2,7 @@
 
         JSlider JavaScript Library
 
-        Copyright 2006, James Melanson, torontojim@yahoo.ca
+        Copyright 2006, James Melanson, jmelanson1965@gmail.com
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
