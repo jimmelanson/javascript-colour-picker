@@ -1,0 +1,441 @@
+<html><head><title>Jim Melanson - JS Colour Picker</title>
+<!--
+       © 2007, James Melanson
+       james_melanson@yahoo.ca
+
+       jscolourpicker_v1_0.zip     2007.01.09
+
+       Distributed under the GNU General Licence.
+
+//-->
+
+<script language="JavaScript" src="jslider_drag.js"></script>
+<script language="JavaScript" src="jslider_ieo.js"></script>
+<script language="JavaScript">
+<!--
+
+var hex_bits = new Array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
+var pos1 = new Array();
+var Rpos1 = new Array();
+var iterate = 0;
+for(var a=0;a<hex_bits.length;a++) {
+  for(var b=0;b<16;b++) {
+    pos1.push(hex_bits[a]+hex_bits[b]);
+    Rpos1[hex_bits[a]+hex_bits[b]] = iterate;
+    iterate++;
+  }
+}
+var coloursRaw = new Array();
+var colours = new Array('lightpink', '#FFB6C1','pink', '#FFC0CB','crimson', '#DC143C','lavenderblush', '#FFF0F5','palevioletred', '#DB7093','hotpink', '#FF69B4','deeppink', '#FF1493','mediumvioletred', '#C71585','orchid', '#DA70D6','thistle', '#D8BFD8',
+'plum', '#DDA0DD','violet', '#EE82EE','magenta', '#FF00FF','fuchsia', '#FF00FF','darkmagenta', '#8B008B','purple','#800080','mediumorchid', '#BA55D3','darkviolet', '#9400D3','darkorchid', '#9932CC','indigo', '#4B0082',
+'blueviolet', '#8A2BE2','mediumpurple', '#9370DB','mediumslateblue', '#7B68EE','slateblue', '#6A5ACD','darkslateblue', '#483D8B','lavender', '#E6E6FA','ghostwhite', '#F8F8FF','blue', '#0000FF','mediumblue', '#0000CD','midnightblue', '#191970',
+'darkblue', '#00008B','navy', '#000080','royalblue', '#4169E1','cornflowerblue', '#6495ED','lightsteelblue', '#B0C4DE','lightslategray', '#778899','slategray', '#708090','dodgerblue', '#1E90FF','aliceblue', '#F0F8FF','steelblue', '#4682B4',
+'lightskyblue', '#87CEFA','skyblue', '#87CEEB','deepskyblue', '#00BFFF','lightblue', '#ADD8E6','powderblue', '#B0E0E6','cadetblue', '#5F9EA0','azure', '#F0FFFF','lightcyan', '#E0FFFF','paleturquoise', '#AFEEEE','cyan', '#00FFFF',
+'aqua', '#00FFFF','darkturquoise', '#00CED1','darkslategray', '#2F4F4F','darkcyan', '#008B8B','teal', '#008080','mediumturquoise', '#48D1CC','lightseagreen', '#20B2AA','turquoise', '#40E0D0','aquamarine', '#7FFFD4','mediumaquamarine', '#66CDAA',
+'mediumspringgreen', '#00FA9A','mintcream', '#F5FFFA','springgreen', '#00FF7F','mediumseagreen', '#3CB371','seagreen', '#2E8B57','honeydew', '#F0FFF0','lightgreen', '#90EE90','palegreen', '#98FB98','darkseagreen', '#8FBC8F','limegreen', '#32CD32',
+'lime', '#00FF00','forestgreen', '#228B22','green', '#008000','darkgreen', '#006400','chartreuse', '#7FFF00','lawngreen', '#7CFC00','greenyellow', '#ADFF2F','darkolivegreen', '#556B2F','yellowgreen', '#9ACD32','olivedrab', '#6B8E23',
+'beige', '#F5F5DC','lightgoldenrodyellow', '#FAFAD2','ivory', '#FFFFF0','lightyellow', '#FFFFE0','yellow', '#FFFF00','olive', '#808000','darkkhaki', '#BDB76B','lemonchiffon', '#FFFACD','palegoldenrod', '#EEE8AA','khaki', '#F0E68C',
+'gold', '#FFD700','cornsilk', '#FFF8DC','goldenrod', '#DAA520','darkgoldenrod', '#B8860B','floralwhite', '#FFFAF0','oldlace', '#FDF5E6','wheat', '#F5DEB3','moccasin', '#FFE4B5','orange', '#FFA500','papayawhip', '#FFEFD5',
+'blanchedalmond', '#FFEBCD','navajowhite', '#FFDEAD','antiquewhite', '#FAEBD7','tan', '#D2B48C','burlywood', '#DEB887','bisque', '#FFE4C4','darkorange', '#FF8C00','linen', '#FAF0E6','peru', '#CD853F','peachpuff', '#FFDAB9',
+'sandybrown', '#F4A460','chocolate', '#D2691E','saddlebrown', '#8B4513','seashell', '#FFF5EE','sienna', '#A0522D','lightsalmon', '#FFA07A','coral', '#FF7F50','orangered', '#FF4500','darksalmon', '#E9967A','tomato', '#FF6347',
+'mistyrose', '#FFE4E1','salmon', '#FA8072','snow', '#FFFAFA','lightcoral', '#F08080','rosybrown', '#BC8F8F','indianred', '#CD5C5C','red', '#FF0000','brown', '#A52A2A','firebrick', '#B22222','darkred', '#8B0000',
+'maroon', '#800000','white', '#FFFFFF','whitesmoke', '#F5F5F5','gainsboro', '#DCDCDC','lightgrey', '#D3D3D3','Silver', '#C0C0C0','darkgray', '#A9A9A9','gray', '#808080','dimgray', '#696969','black', '#000000');
+
+var darkcolours = new Array('crimson','#DC143C','deeppink','#FF1493','mediumvioletred','#C71585','plum','#DDA0DD','violet','#EE82EE','darkmagenta','#8B008B','purple','#800080','darkviolet','#9400D3','darkorchid','#9932CC','indigo','#4B0082',
+'blueviolet','#8A2BE2','mediumpurple','#9370DB','darkslateblue','#483D8B','blue', '#0000FF','mediumblue','#0000CD','midnightblue','#191970','mediumorchid', '#BA55D3','darkblue','#00008B','navy', '#000080','royalblue','#4169E1',
+'steelblue','#4682B4','darkturquoise','#00CED1','darkslategray','#2F4F4F','darkcyan','#008B8B','teal','#008080','mediumslateblue','#7B68EE','slateblue','#6A5ACD','lightslategray','#778899','slategray','#708090','forestgreen','#228B22',
+'green','#008000','seagreen','#2E8B57','darkgreen','#006400','darkolivegreen','#556B2F','olivedrab','#6B8E23','olive','#808000','darkgoldenrod','#B8860B','chocolate','#D2691E','saddlebrown','#8B4513','sienna','#A0522D',
+'maroon','#800000','gray','#808080','dimgray','#696969','limegreen','#32CD32','yellowgreen','#9ACD32','darkorange','#FF8C00','sandybrown','#F4A460','lightsalmon', '#FFA07A','coral','#FF7F50','orangered','#FF4500',
+'darksalmon','#E9967A','indianred','#CD5C5C','red', '#FF0000','brown', '#A52A2A','firebrick','#B22222','darkred','#8B0000','black','#000000');
+
+var r = new JSlider('r');
+r.horizontal = 1;
+r.trackColor = '#696969';
+r.pathColor = '#d3d3d3';
+r.knobWidth = 20;
+r.knobHeight = 30;
+r.knobBGColor = '#FF0000';
+r.knobBorderColour = '#FFC0CB';
+r.knobBGColorRollover = '#FF0000';
+r.knobBorderColourRollover = '#FFC0CB';
+r.pathColorRollover = '#CDCDCD';
+r.pathStyleRollover = 'solid';
+r.trackMaxValue = 255;
+r.pixelsPerUnit = 2;
+r.valueReport('r_rgb','value','integer');
+r.valueNotify();
+
+var g = new JSlider('g');
+g.horizontal = 1;
+g.trackColor = '#696969';
+g.pathColor = '#d3d3d3';
+g.knobWidth = 20;
+g.knobHeight = 30;
+g.knobBGColor = '#3CB371';
+g.knobBorderColour = '#90EE90';
+g.knobBGColorRollover = '#3CB371';
+g.knobBorderColourRollover = '#90EE90';
+g.knobFontColorRollover = '#FF0000';
+g.pathColorRollover = '#cdcdcd';
+g.pathStyleRollover = 'solid';
+g.trackMaxValue = 255;
+g.pixelsPerUnit = 2;
+g.valueReport('g_rgb','value','integer');
+g.valueNotify();
+
+var b = new JSlider('b');
+b.horizontal = 1;
+b.trackColor = '#696969';
+b.pathColor = '#d3d3d3';
+b.knobWidth = 20;
+b.knobHeight = 30;
+b.knobBGColor = '#1E90FF';
+b.knobBorderColour = '#87CEFA';
+b.knobBGColorRollover = '#1E90FF';
+b.knobBorderColourRollover = '#87CEFA';
+b.pathColorRollover = '#CDCDCD';
+b.pathStyleRollover = 'solid';
+b.trackMaxValue = 255;
+b.pixelsPerUnit = 2;
+b.valueReport('b_rgb','value','integer');
+b.valueNotify();
+
+var readingCurrentSlider = '';
+var JSlider_CaptureChange = new Object();
+JSlider_CaptureChange.notify = function() {
+  if(readingCurrentSlider == arguments[1]) {
+    var pVal = arguments[0];
+    if(pVal.length < 2) {
+      pVal = '0' + pVal;
+    }
+    concanHexRGB(pVal, arguments[1]);
+  }
+};
+
+function forceHex() {
+  var r_is = document.getElementById('showcolourlist').value.substr(1,2);
+  var g_is = document.getElementById('showcolourlist').value.substr(3,2);
+  var b_is = document.getElementById('showcolourlist').value.substr(5,2);
+  document.getElementById('rgb').value = Rpos1[r_is]+','+Rpos1[g_is]+','+Rpos1[b_is];
+  document.getElementById('r_rgb').value = Rpos1[r_is];
+  document.getElementById('g_rgb').value = Rpos1[g_is];
+  document.getElementById('b_rgb').value = Rpos1[b_is];
+  r.valueSet(Rpos1[r_is]);
+  g.valueSet(Rpos1[g_is]);
+  b.valueSet(Rpos1[b_is]);
+  document.getElementById('hex').value = '#'+r_is+g_is+b_is;
+  document.getElementById('r_hex').value = r_is;
+  document.getElementById('g_hex').value = g_is;
+  document.getElementById('b_hex').value = b_is;
+  document.getElementById('colourArea').style.backgroundColor = document.getElementById('hex').value;
+}
+
+function concanHexRGB(sValue, hName) {
+  var hexID = hName+'_hex';
+  var setVal = pos1[sValue];
+  if(setVal.length < 2) {
+    setVal = '0'+setVal;
+  }
+  document.getElementById(hexID).value = setVal;
+  document.getElementById('rgb').value = document.getElementById('r_rgb').value+','+document.getElementById('g_rgb').value+','+document.getElementById('b_rgb').value;
+  document.getElementById('hex').value = '#'+document.getElementById('r_hex').value+document.getElementById('g_hex').value+document.getElementById('b_hex').value;
+  document.getElementById('colourArea').style.backgroundColor = document.getElementById('hex').value;
+  setColourSelectList(document.getElementById('hex').value)
+}
+
+function typedHex(hexValue) {
+  if(hexValue.length>7) {
+    hexValue = hexValue.substr(0, 7);
+  } else {
+    if(document.getElementById('hex').value=='') {
+      document.getElementById('hex').value = '#';
+    }
+    if(document.getElementById('hex').value=='##') {
+      document.getElementById('hex').value = '#';
+    }
+    if(document.getElementById('hex').value.charAt(0) != '#') {
+      document.getElementById('hex').value = '#'+document.getElementById('hex').value;
+    }
+  }
+  if(hexValue.length == 7) {
+    document.getElementById('showcolourlist').value = hexValue;
+    r_hex_is = hexValue.substr(1, 2);
+    if(!r_hex_is || (r_hex_is == 0)) {
+      r_hex_is = '00';
+    } else {
+      r_hex_is = r_hex_is.toUpperCase();
+      if(r_hex_is.length < 2) {
+        r_hex_is = '0' + r_hex_is;
+      }
+    }
+    g_hex_is = hexValue.substr(3, 2);
+    if(!g_hex_is || (g_hex_is == 0)) {
+      g_hex_is = '00';
+    } else {
+      g_hex_is = g_hex_is.toUpperCase();
+      if(g_hex_is.length < 2) {
+        g_hex_is = '0' + g_hex_is;
+      }
+    }
+    b_hex_is = hexValue.substr(5, 2);
+    if(!b_hex_is || (b_hex_is == 0)) {
+      b_hex_is = '00';
+    } else {
+      b_hex_is = b_hex_is.toUpperCase();
+      if(b_hex_is.length < 2) {
+        b_hex_is = '0' + b_hex_is;
+      }
+    }
+    document.getElementById('hex').value = '#'+r_hex_is.toString()+g_hex_is.toString()+b_hex_is.toString();
+    document.getElementById('colourArea').style.backgroundColor = document.getElementById('hex').value;
+    setColourSelectList(document.getElementById('hex').value);
+    document.getElementById('r_hex').value = r_hex_is;
+    document.getElementById('g_hex').value = g_hex_is;
+    document.getElementById('b_hex').value = b_hex_is;
+    r.valueSet(Rpos1[r_hex_is]);
+    g.valueSet(Rpos1[g_hex_is]);
+    b.valueSet(Rpos1[b_hex_is]);
+    document.getElementById('rgb').value = Rpos1[r_hex_is]+','+Rpos1[g_hex_is]+','+Rpos1[b_hex_is];
+  }
+}
+
+function resetPicker() {
+  document.getElementById('rgb').value = '0,0,0';
+  document.getElementById('hex').value = '#000000';
+  document.getElementById('r_rgb').value = '0';
+  document.getElementById('g_rgb').value = '0';
+  document.getElementById('b_rgb').value = '0';
+  document.getElementById('r_hex').value = '00';
+  document.getElementById('g_hex').value = '00';
+  document.getElementById('b_hex').value = '00';
+  r.valueSet(0);
+  g.valueSet(0);
+  b.valueSet(0);
+  document.getElementById('colourArea').style.backgroundColor = document.getElementById('hex').value;
+  setColourSelectList('#000000')
+}
+
+var sNum = 0;
+var sVals = new Array();
+var cursorVal = 'hand';
+if(navigator.appName=='Netscape') {
+  cursorVal = 'pointer';
+}
+function saveColour() {
+  var notSaved = true;
+  for(var si=0; si<sVals.length;si++) {
+    if(sVals[si]) {
+      if(sVals[si]==document.getElementById('hex').value) {
+        notSaved = false;
+      }
+    }
+  }
+  if(notSaved) {
+    sVals.push(document.getElementById('hex').value);
+    sNum++;
+    document.getElementById('savedColoursText').innerHTML += '<a style="cursor:'+cursorVal+';" id="saved'+sNum+'" onClick="typedHex(document.getElementById(\'saved'+sNum+'\').innerHTML)">'+document.getElementById('hex').value+'</a><br>';
+    if(readCookie('savedColours')) {
+      createCookie('savedColours', readCookie('savedColours')+document.getElementById('hex').value+':');
+    } else {
+      createCookie('savedColours', document.getElementById('hex').value+':');
+    }
+  }
+}
+
+function clearSaved() {
+  document.getElementById('savedColoursText').innerHTML = '';
+  eraseCookie('savedColours');
+}
+
+function focusWin() {
+  if (document.getElementById('hex').createTextRange) {
+    var oRange = document.getElementById('hex').createTextRange(); 
+    oRange.moveStart("character", 0); 
+    oRange.moveEnd("character", document.getElementById('hex').value.length); 
+    oRange.select();
+  } else if (document.getElementById('hex').setSelectionRange) {
+    document.getElementById('hex').setSelectionRange(0, document.getElementById('hex').value.length);
+  } 
+  document.getElementById('hex').focus(); 
+}
+
+function setColourSelectList(sColour) {
+  if(navigator.appName!='Netscape') {
+    if(coloursRaw[sColour]) {
+      document.getElementById('showcolourlist').selectedIndex = coloursRaw[sColour];
+    } else {
+      document.getElementById('showcolourlist').selectedIndex = 0;
+    }
+  }
+}
+
+function createCookie(name,value,days) {
+  if(!days) {
+    days = 365;
+  }
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') {
+      c = c.substring(1,c.length);
+    }
+    if (c.indexOf(nameEQ) == 0) {
+      return c.substring(nameEQ.length,c.length);
+    }
+  }
+  return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
+}
+
+function loadSaved() {
+  if(readCookie('savedColours')) {
+    var rc = readCookie('savedColours');
+    var saved_bits = rc.split(':');
+    if(saved_bits) {
+      var src= '';
+      for(var sbi = 0; sbi < saved_bits.length; sbi++) {
+        if(saved_bits[sbi]) {
+          sNum++;
+          src += '<a style="cursor:'+cursorVal+';" id="saved'+sNum+'" onClick="typedHex(\''+saved_bits[sbi]+'\')">'+saved_bits[sbi]+'</a><br>';
+        }
+      }
+      document.getElementById('savedColoursText').innerHTML = src;
+      src = '';
+    }
+  }
+}
+
+function termsMessage() {
+  var message = 'You may download and use this utility on your local computer for free.\n\nYou may install this on your web space provided you meet the following conditions:\n\n1.) You do not charge for access to the utility.\n\n2.) The utility is not altered in any way.\n\n3.) You offer the utility for download according to the same terms and conditions.\n\n4.) All copyright notices and headers remain intact and un-altered.';
+  window.alert(message);
+}
+
+
+//-->
+</script>
+<style type="text/css">
+<!--
+.rbtnup { background-color:#0000CD; color:#E6E6FA; }
+.rbtndv { background-color:#E6E6FA; color:#0000CD; }
+//-->
+</style>
+</head>
+<body bgcolor="#FFFFFF" onload="loadSaved()">
+
+<div id="titleDivtop" style="position:absolute;left:65px;top:10px;font-family:tahoma,verdana,sans-serif;font-size:36px;font-weight:bold;z-index:2;color:#283CDD;">Jim Melanson - JS Colour Picker</div>
+<div id="titleDivbottom" style="position:absolute;left:67px;top:8px;font-family:tahoma,verdana,sans-serif;font-size:36px;font-weight:bold;z-index:1;color:#D6D6D6;">Jim Melanson - JS Colour Picker</div>
+
+<form name="cT">
+<div id="colourArea" style="position:absolute;top:70px;left:30px;width:650px;height:160px;background-color:#000000;border:3px ridge #D2691E;">
+  <input type="text" name="rgb" id="rgb" value="0,0,0" style="position:absolute;left:545px;top:90px;width:85px;background-color:#F5F5F5;color:#696969;border:3px inset #CDCDCD;text-align:center;" readonly>
+  <input type="text" name="hex" id="hex" value="#000000" style="position:absolute;left:545px;top:125px;width:85px;background-color:#FFFFFF;border:3px inset #CDCDCD;text-align:center;" onmouseover="focusWin();" onkeyup="typedHex(this.value)">
+</div>
+
+<input type="text" name="r_rgb" id="r_rgb" value="0" style="position:absolute;top:257px;left:580px;background-color:#F5F5F5;color:#696969;border:2px ridge #A9A9A9;width:30px;text-align:center;" readonly>
+<input type="text" name="r_hex" id="r_hex" value="00" style="position:absolute;top:257px;left:630px;background-color:#F5F5F5;color:#696969;border:2px ridge #A9A9A9;width:30px;text-align:center;" readonly>
+<div id="sliderHolder1" style="position:absolute;top:250px;left:30px;padding:0px;margin:0px;" onmouseover="readingCurrentSlider='r';" onmouseout="readingCurrentSlider='';">
+<script language="JavaScript">
+<!--
+r.slider();
+//-->
+</script>
+</div>
+
+<input type="text" name="g_rgb" id="g_rgb" value="0" style="position:absolute;top:308px;left:580px;background-color:#F5F5F5;color:#696969;border:2px ridge #A9A9A9;width:30px;text-align:center;" readonly>
+<input type="text" name="g_hex" id="g_hex" value="00" style="position:absolute;top:308px;left:630px;background-color:#F5F5F5;color:#696969;border:2px ridge #A9A9A9;width:30px;text-align:center;" readonly>
+<div id="sliderHolder2" style="position:absolute;top:300px;left:30px;padding:0px;margin:0px;" onmouseover="readingCurrentSlider='g';" onmouseout="readingCurrentSlider='';">
+<script language="JavaScript">
+<!--
+g.slider();
+//-->
+</script>
+</div>
+
+<input type="text" name="b_rgb" id="b_rgb" value="0" style="position:absolute;top:359px;left:580px;background-color:#F5F5F5;color:#696969;border:2px ridge #A9A9A9;width:30px;text-align:center;" readonly>
+<input type="text" name="b_hex" id="b_hex" value="00" style="position:absolute;top:359px;left:630px;background-color:#F5F5F5;color:#696969;border:2px ridge #A9A9A9;width:30px;text-align:center;" readonly>
+<div id="sliderHolder3" style="position:absolute;top:350px;left:30px;padding:0px;margin:0px;" onmouseover="readingCurrentSlider='b';" onmouseout="readingCurrentSlider='';">
+<script language="JavaScript">
+<!--
+b.slider();
+//-->
+</script>
+</div>
+
+<div id="colourSelectListHolder" style="position:absolute;top:400px;left:30px;padding:0px;margin:0px;">
+  <div id="colourSelectList" style="position:absolute;display:block;top:0px;left:0px;">
+<select name="showcolourlist" id="showcolourlist" size="1" onChange="forceHex()" style="display:block;border: 3px ridge #808080;">
+<option value="">No Matching Word Value</option>
+<script language="JavaScript">
+<!--
+var colourIndexOf = 1;
+for(c=0; c<= colours.length; c++) {
+  var usewhite = 0;
+  for(w=0;w<darkcolours.length;w++) {
+    if(!usewhite) {
+      if(colours[c+1] == darkcolours[w+1]) {
+        usewhite = 1;
+      }
+    }
+    w++;
+  }
+  if(colours[c] != undefined) {
+    coloursRaw[colours[c+1]] = colourIndexOf;
+    colourIndexOf++;
+    if(usewhite) {
+      document.writeln('<option style="background-color:'+colours[c+1]+';color:#FFFFFF;" VALUE="'+colours[c+1]+'">'+colours[c+1]+': '+colours[c]+'</option>');
+    }
+    else {
+      document.writeln('<option style="background-color:'+colours[c+1]+';color:#000000;" VALUE="'+colours[c+1]+'">'+colours[c+1]+': '+colours[c]+'</option>');
+    }
+  }
+  c++;
+}
+colours.length = 0;
+darkcolours.length = 0;
+
+//-->
+</script>
+</select>
+  </div>
+<script language="JavaScript">
+<!--
+if(navigator.appName=='Netscape') {
+  document.getElementById('colourSelectList').style.display = 'none';
+} else {
+  document.getElementById('showcolourlist').selectedIndex = coloursRaw['#000000'];
+}
+//-->
+</script>
+
+<input type="button" name="savebtn" id="savebtn" value="Save Colour" onmouseover="this.className='rbtndn';" onmouseout="this.className='rbtnup';" class="rbtnup" style="position:absolute;left:350px;top:0px;width:125px;border:4px outset #191970;font-weight:bold;" onClick="saveColour()">
+<input type="button" name="resetbtn" id="resetbtn" value="Reset Picker" onmouseover="this.className='rbtndn';" onmouseout="this.className='rbtnup';" class="rbtnup" style="position:absolute;left:523px;top:0px;width:125px;border:4px outset #191970;font-weight:bold;" onClick="resetPicker()">
+</div>
+<div id="savedColours" style="position:absolute;left:700px;top:70px;width:125px;height:350px;background-color:#FAF0E6;color:#808080;border:4px ridge #D2691E;font-family:tahoma,verdana,sans-serif;font-size:10pt;text-align:center;">
+  <div id="savedColoursTitle" style="position:absolute;top:0px;left:0px;width:121px;border:2px outset #808080;background-color:#D2691E;color:FAF0E6;font-family:tahoma,verdana,sans-serif;font-size:9pt;text-align:center;font-weight:bold;">Click Saved HEX<br>To Set</div>
+  <br><br>[<a style="cursor:hand;color:maroon;" onClick="if(window.confirm('Are you sure you want to clear this list?')) {clearSaved()}">Clear List</a>]<br>
+  <div id="savedColoursText" style="position:absolute;left:0px;top:49px;width:117px;height:290px;background-color:#FAF0E6;color:#808080;border:0px none;font-family:tahoma,verdana,sans-serif;font-size:10pt;text-align:center;"></div>
+</div>
+
+<div id="instructions" style="position:absolute;left:30px;top:450px;width:795px;height:80px;background-color:#FAF0E6;color:#808080;border:4px ridge #D2691E;font-family:tahoma,verdana,sans-serif;font-size:10pt;font-weight:bold;text-align:center;">
+  Use the sliders to create an RGB/HEX number &#149; Use the resulting HEX attribute for color properties of HTML tags &#149; Type a HEX number in the appropriate box to see the colour &#149; Save colours you want to use &#149; Click saved colours to have that colour loaded in the picker again &#149; Click "Clear List" to remove saved colours
+  <script language="JavaScript">if(navigator.appName!='Netscape') {document.write(' &#149; Select a HEX colour/Word colour from the list to see it loaded');}</script> &#149; Saved colours will be present next time you call the Colour Picker on this computer &#149;
+  <br><a onClick="termsMessage();" style="text-decoration:underline;">Click Here For Terms Of Download</a> &#149; <a href="jscolourpicker_v1_0.zip" style="color:#808080;">Click Here To Download This Utility</a> &#149; &copy; 2007, <a href="mailto:james_melanson@yahoo.ca" style="color:#808080;">James Melanson</a>
+</div>
+
+</form>
+</body>
+</html>
+
